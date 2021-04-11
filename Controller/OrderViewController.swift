@@ -17,6 +17,7 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     @IBOutlet weak var orderCoffeeDescribeLabel: UILabel!
     @IBOutlet weak var orderQuantityLabel: UILabel!
     @IBOutlet weak var orderPriceLabel: UILabel!
+    @IBOutlet weak var addToOrderListButton: UIButton!
     
     var menuData: Array<Record> = []
     var ordererName: String?
@@ -32,8 +33,14 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     var updateOrderData = false
     var orderDataID: String?
     
+    var delegate: OrderListViewController?
+    
     var orderPrice: Int?
     var feedPrice = 0
+    
+    let apiKey = "keyNs8bjk9Yd8xlXw"
+    let urlStr = "https://api.airtable.com/v0/apphzzfdMDr480WN8/OrderData"
+    
     
     var sizeChecked = Array(repeating: false, count: Size.allCases.count)
     
@@ -41,6 +48,7 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
     getCoffeeData()
+        display()
         // Do any additional setup after loading the view.
     }
     
@@ -78,7 +86,6 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
             let cell = customSelectionTableView.dequeueReusableCell(withIdentifier: "OrdererTableViewCell") as! OrdererTableViewCell
             cell.ordererLabel.text = "訂購人："
             cell.ordererNameTextField.placeholder = "請輸入你的小名"
-            cell.ordererNameTextField.delegate = self
             guard let ordererName = ordererName else {
                 return cell
             }
@@ -142,8 +149,8 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
                 self.drinkImageURL = Record.fields.Img[0].url
                 orderCoffeeImageView.image = nil
                 
-                if let urlStr = URL(string: self.drinkImageURL){
-                    URLSession.shared.dataTask(with: urlStr) { (data, reesponse, error) in
+                if let imageUrl = URL(string: self.drinkImageURL){
+                    URLSession.shared.dataTask(with: imageUrl) { (data, reesponse, error) in
                         if let data = data,
                            let image = UIImage(data: data){
                             DispatchQueue.main.async {
@@ -164,6 +171,19 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     
     }
     
+    
+    func display() {
+        print("Display")
+        if updateOrderData {
+            addToOrderListButton.setTitle("修改清單", for: .normal)
+        }
+        else{
+            addToOrderListButton.setTitle("加入訂單", for: .normal)
+            coffeePrice = mediumPrice
+        }
+        showOrderPrice()
+        orderCoffeeLabel.text = coffeeName
+    }
     
     
     func showOrderPrice() {
@@ -199,6 +219,99 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         return true
+    }
+    
+    
+    // MARK: POST / UPDATE DATA
+    
+    func sentOrderRequest() {
+    
+        let orderData = OrderData(Name: ordererName!, Coffee: coffeeName, Price: orderPrice!, Size: size, Quantity: coffeeQuantity)
+        
+        let coffeeOrder = PostCoffeeOrder(fields: orderData)
+        
+        let url: URL?
+        if updateOrderData {
+            guard let id = orderDataID else { return }
+            
+            let updateURL = urlStr + "/\(id)"
+            url = URL(string: updateURL)
+        }else{
+            url = URL(string: urlStr)!
+        }
+        
+    var urlRequest = URLRequest(url: url!)
+        if updateOrderData {
+            urlRequest.httpMethod = "PUT"
+        }
+        else{
+            urlRequest.httpMethod = "POST"
+        }
+       
+        urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        
+        let jsonEncoder = JSONEncoder()
+        print("bulid jsonEncoder")
+        if let data = try? jsonEncoder.encode(coffeeOrder) {
+            print("try jsonEncoder")
+            URLSession.shared.uploadTask(with: urlRequest, from: data) { (reData, res, error) in
+                if let response = res as? HTTPURLResponse,
+                   response.statusCode == 200,error == nil {
+                    print("success")
+                }
+                else{
+                    print(error)
+                }
+            }.resume()
+        }
+        
+    }
+    
+    @IBAction func addToOrderList(_ sender: Any) {
+        var addToOrderListButtonTitle: String!
+        if addToOrderListButton.titleLabel?.text == "加入訂單"{
+            addToOrderListButtonTitle = "加入訂單"
+        }
+        else{
+            addToOrderListButtonTitle = "修改訂單"
+        }
+        let controller = UIAlertController(title: addToOrderListButtonTitle, message: "", preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "確定", style: .default) { (_) in
+            guard self.checkOption() else{
+            return }
+            
+            self.sentOrderRequest()
+            self.dismiss(animated: true) {
+                self.delegate?.updateUI()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+        
+        controller.addAction(confirmAction)
+        controller.addAction(cancelAction)
+        present(controller, animated: true)
+    }
+    
+    func checkOption() -> Bool {
+        print( sizeChecked,ordererName)
+        var check = false
+        sizeChecked.forEach { size in
+            guard size == true else { return }
+            guard let _ = ordererName else{ return }
+            check = true
+        }
+    
+        if check == false {
+            let controller = UIAlertController.init(title: "", message: "資料未填寫完全", preferredStyle: .alert)
+            let confirmAction = UIAlertAction(title: "OK", style: .cancel)
+            controller.addAction(confirmAction)
+            present(controller, animated: true)
+        }
+        
+        return check
     }
     /*
     // MARK: - Navigation
