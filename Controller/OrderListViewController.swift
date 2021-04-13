@@ -67,6 +67,39 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             
             return cell
         }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let controller = UIAlertController(title: "確定要刪除嗎", message: "", preferredStyle: .alert)
+            let okAtcion = UIAlertAction(title: "確定", style: .default) { (_) in
+                let dataID = self.orderCoffeeData[indexPath.row].id
+                print(dataID)
+                self.deleteData(urlStr: self.urlStr, id: dataID) {
+                   // print("dalete 76")
+                    self.orderCoffeeData.remove(at: indexPath.row)
+                    DispatchQueue.main.async {
+                        
+                        self.ititTotal()
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                       // print("deleteRow")
+                    }
+                }
+                print("dalete 76")
+                self.orderCoffeeData.remove(at: indexPath.row)
+                DispatchQueue.main.async {
+                    
+                    self.ititTotal()
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    print("deleteRow")
+                }
+                
+            }
+            
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+            controller.addAction(okAtcion)
+            controller.addAction(cancelAction)
+            present(controller, animated: true)
+        }
+    }
     
     func updateUI() {
         print("fetch Data...")
@@ -181,6 +214,18 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             urlRequest.httpMethod = "DELETE"
             urlRequest.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
             
+            let decoder = JSONDecoder()
+            
+            URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+                if let data = data {
+                    do { let dic = try? decoder.decode(DeleteData.self, from: data)
+                        print(dic)
+                       print("delete down")
+                    }catch{
+                        print(error)
+                    }
+                }
+            }.resume()
         }
     }
     /*
@@ -192,5 +237,29 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
         // Pass the selected object to the new view controller.
     }
     */
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let row = orderListTableView.indexPathForSelectedRow?.row,
+           let controller = segue.destination as? OrderViewController {
+            controller.delegate = self
+            let selectedOrderCoffeeData = self.orderCoffeeData[row]
+            let coffeeSize = selectedOrderCoffeeData.fields.Size
+            let name = selectedOrderCoffeeData.fields.Name
+            
+            controller.updateOrderData = true
+            controller.orderDataID = selectedOrderCoffeeData.id
+            controller.ordererName = selectedOrderCoffeeData.fields.Name
+            controller.coffeeName = selectedOrderCoffeeData.fields.Coffee
+            controller.size = selectedOrderCoffeeData.fields.Size
+            controller.orderPrice = selectedOrderCoffeeData.fields.Price
+            controller.coffeeQuantity = selectedOrderCoffeeData.fields.Quantity
+            controller.coffeePrice = getCoffeePrice(coffeeSize: coffeeSize)
+            
+            
+        }
+        
+        
+    }
+    
+    
+    
 }

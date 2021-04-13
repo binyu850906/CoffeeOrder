@@ -176,6 +176,7 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
         print("Display")
         if updateOrderData {
             addToOrderListButton.setTitle("修改清單", for: .normal)
+            optionCheckForUpdateMode()
         }
         else{
             addToOrderListButton.setTitle("加入訂單", for: .normal)
