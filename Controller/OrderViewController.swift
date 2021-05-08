@@ -145,7 +145,7 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
             if coffeeName == Record.fields.Name{
                 print("drinkName:\(coffeeName)")
                 orderCoffeeLabel.text = coffeeName.description
-                
+                coffeeDesrcibe = Record.fields.Description
                 self.drinkImageURL = Record.fields.Img[0].url
                 orderCoffeeImageView.image = nil
                 
@@ -156,6 +156,7 @@ class OrderViewController: UIViewController,UITableViewDelegate,UITableViewDataS
                             DispatchQueue.main.async {
                                 print{"imageDone"}
                                 self.orderCoffeeImageView.image = image
+                                self.orderCoffeeDescribeLabel.text = self.coffeeDesrcibe
                             }
                             
                         }

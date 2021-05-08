@@ -43,6 +43,7 @@ struct Field: Codable {
     let ExtraLarge: Int?
     let Large: Int
     let Name: String
+    let Description: String
     let Img: [DrinkImage]
     struct DrinkImage: Codable {
         let url: String
