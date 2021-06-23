@@ -91,9 +91,9 @@ class MenuViewController: UIViewController,UICollectionViewDelegate,UICollection
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let controller = segue.destination as? OrderViewController
+        let controller = segue.destination as? OrderTableViewController
         if let item = menuCollectionView.indexPathsForSelectedItems?.first?.item{
-            controller?.coffeeName
+            controller?.selectedCoffeeName
                 = menuData[item].fields.Name
         }
     }

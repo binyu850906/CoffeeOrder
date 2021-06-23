@@ -23,7 +23,8 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
     var loadingActivityIndicator: UIActivityIndicatorView!
     var menuData:Array<Record> = []
     var orderCoffeeData = [CoffeeOrder]()
-    
+
+    var imageURLStr: String?
     override func viewDidLoad() {
         super.viewDidLoad()
          
@@ -64,6 +65,9 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             cell.coffeeQuantityLabel.text =
                 quantity.description
             cell.sizeLabel.text = coffeeSize
+            getImage(urlStr: imageURLStr) { image in
+                cell.coffeeImageView.image = image
+            }
             
             return cell
         }
@@ -119,6 +123,21 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
         }
     }
     
+    func getImage (urlStr: String?, completion: @escaping  (UIImage?) -> Void ) {
+        
+        if let urlStr = urlStr, let url = URL(string: urlStr) {
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let data = data,let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        completion(image)
+                    }
+                }else{
+                    completion(nil)
+                }
+            }.resume()
+        }
+    }
+    
     func creatLoadingView() {
         loadingActivityIndicator = UIActivityIndicatorView(style: .medium)
         loadingActivityIndicator.center = view.center
@@ -149,6 +168,7 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
     func getCoffeeData(coffeeName: String) {
         menuData.forEach { (Record) in
             if coffeeName == Record.fields.Name{
+                self.imageURLStr = Record.fields.Img.first?.url
                 self.mediumPrice = Record.fields.Medium
                 self.largePrice = Record.fields.Large
                 guard let extraLargePrice = Record.fields.ExtraLarge
@@ -158,6 +178,7 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             }
         }
     }
+
     
     func getCoffeePrice(coffeeSize: String) -> Int {
         var coffeePrice = 0
@@ -239,20 +260,23 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
     */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let row = orderListTableView.indexPathForSelectedRow?.row,
-           let controller = segue.destination as? OrderViewController {
+           let controller = segue.destination as? OrderTableViewController {
             controller.delegate = self
+            
             let selectedOrderCoffeeData = self.orderCoffeeData[row]
+            print(selectedOrderCoffeeData)
             let coffeeSize = selectedOrderCoffeeData.fields.Size
             let name = selectedOrderCoffeeData.fields.Name
             
             controller.updateOrderData = true
             controller.orderDataID = selectedOrderCoffeeData.id
             controller.ordererName = selectedOrderCoffeeData.fields.Name
-            controller.coffeeName = selectedOrderCoffeeData.fields.Coffee
-            controller.size = selectedOrderCoffeeData.fields.Size
-            controller.orderPrice = selectedOrderCoffeeData.fields.Price
+            controller.selectedCoffeeName = selectedOrderCoffeeData.fields.Coffee
+            
+            controller.selectedSize = selectedOrderCoffeeData.fields.Size
+            controller.totalPrize = selectedOrderCoffeeData.fields.Price
             controller.coffeeQuantity = selectedOrderCoffeeData.fields.Quantity
-            controller.coffeePrice = getCoffeePrice(coffeeSize: coffeeSize)
+            
             
             
         }

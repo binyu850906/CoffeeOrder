@@ -18,9 +18,3 @@ enum Size: String, CaseIterable {
     case extraLarge = "特大杯"
 }
 
-extension CaseIterable {
-    static func from(string: String) -> Self? {
-        return Self.allCases.first { string == "\($0)" }
-    }
-    func toString() -> String { "\(self)" }
-}

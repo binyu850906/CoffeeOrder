@@ -15,13 +15,13 @@
 		7989B83C261995E8005991C2 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7989B83B261995E8005991C2 /* MenuViewController.swift */; };
 		7989B83E261996BD005991C2 /* CoffeeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7989B83D261996BD005991C2 /* CoffeeMenu.swift */; };
 		7989B84026199BED005991C2 /* MenuCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7989B83F26199BED005991C2 /* MenuCollectionViewCell.swift */; };
-		79A30D70261C3195009FB299 /* OrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D6F261C3195009FB299 /* OrderViewController.swift */; };
 		79A30D72261C4D21009FB299 /* CustomSelectionEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D71261C4D21009FB299 /* CustomSelectionEnum.swift */; };
 		79A30D74261C5CB3009FB299 /* OrdererTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D73261C5CB3009FB299 /* OrdererTableViewCell.swift */; };
 		79A30D78261C5D3F009FB299 /* OrderCoffeeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D77261C5D3F009FB299 /* OrderCoffeeTableViewCell.swift */; };
 		79A30D7A261EFB97009FB299 /* OrderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D79261EFB97009FB299 /* OrderListViewController.swift */; };
 		79A30D7E261FFA4C009FB299 /* OrderListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D7D261FFA4C009FB299 /* OrderListTableViewCell.swift */; };
 		79A30D80261FFEE0009FB299 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A30D7F261FFEE0009FB299 /* Order.swift */; };
+		79F906892682FE3D00129875 /* OrderTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F906882682FE3D00129875 /* OrderTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,13 +35,13 @@
 		7989B83B261995E8005991C2 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		7989B83D261996BD005991C2 /* CoffeeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeMenu.swift; sourceTree = "<group>"; };
 		7989B83F26199BED005991C2 /* MenuCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCollectionViewCell.swift; sourceTree = "<group>"; };
-		79A30D6F261C3195009FB299 /* OrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViewController.swift; sourceTree = "<group>"; };
 		79A30D71261C4D21009FB299 /* CustomSelectionEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSelectionEnum.swift; sourceTree = "<group>"; };
 		79A30D73261C5CB3009FB299 /* OrdererTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdererTableViewCell.swift; sourceTree = "<group>"; };
 		79A30D77261C5D3F009FB299 /* OrderCoffeeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OrderCoffeeTableViewCell.swift; path = View/OrderCoffeeTableViewCell.swift; sourceTree = SOURCE_ROOT; };
 		79A30D79261EFB97009FB299 /* OrderListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListViewController.swift; sourceTree = "<group>"; };
 		79A30D7D261FFA4C009FB299 /* OrderListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderListTableViewCell.swift; sourceTree = "<group>"; };
 		79A30D7F261FFEE0009FB299 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
+		79F906882682FE3D00129875 /* OrderTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,8 +101,8 @@
 		7989B84226199C1B005991C2 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				79F906882682FE3D00129875 /* OrderTableViewController.swift */,
 				79A30D79261EFB97009FB299 /* OrderListViewController.swift */,
-				79A30D6F261C3195009FB299 /* OrderViewController.swift */,
 				7989B83B261995E8005991C2 /* MenuViewController.swift */,
 			);
 			path = Controller;
@@ -191,13 +191,13 @@
 				7989B83E261996BD005991C2 /* CoffeeMenu.swift in Sources */,
 				7989B8282619946C005991C2 /* AppDelegate.swift in Sources */,
 				7989B83C261995E8005991C2 /* MenuViewController.swift in Sources */,
+				79F906892682FE3D00129875 /* OrderTableViewController.swift in Sources */,
 				79A30D74261C5CB3009FB299 /* OrdererTableViewCell.swift in Sources */,
 				7989B82A2619946C005991C2 /* SceneDelegate.swift in Sources */,
 				79A30D7A261EFB97009FB299 /* OrderListViewController.swift in Sources */,
 				79A30D80261FFEE0009FB299 /* Order.swift in Sources */,
 				7989B84026199BED005991C2 /* MenuCollectionViewCell.swift in Sources */,
 				79A30D72261C4D21009FB299 /* CustomSelectionEnum.swift in Sources */,
-				79A30D70261C3195009FB299 /* OrderViewController.swift in Sources */,
 				79A30D78261C5D3F009FB299 /* OrderCoffeeTableViewCell.swift in Sources */,
 				79A30D7E261FFA4C009FB299 /* OrderListTableViewCell.swift in Sources */,
 			);
