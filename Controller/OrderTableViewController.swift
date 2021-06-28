@@ -220,6 +220,7 @@ func getCoffeeData () {
         }
         coffeeQuantityLabel.text = coffeeQuantity.description
     }
+    
     func sentOrderRequest() {
         let orderData = OrderData(Name: ordererName!, Coffee: selectedCoffeeName!, Price: totalPrize!, Size: selectedSize!, Quantity: coffeeQuantity)
         

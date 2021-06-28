@@ -58,7 +58,7 @@ class MenuViewController: UIViewController,UICollectionViewDelegate,UICollection
     }
     
     func setcell() {
-        menuCollectionViewFlowLayout.itemSize = CGSize(width: 115, height: 115)
+        menuCollectionViewFlowLayout.itemSize = CGSize(width: 125, height: 125)
         menuCollectionViewFlowLayout.estimatedItemSize = .zero
         menuCollectionViewFlowLayout.minimumInteritemSpacing = 1
         menuCollectionViewFlowLayout.minimumLineSpacing = 5

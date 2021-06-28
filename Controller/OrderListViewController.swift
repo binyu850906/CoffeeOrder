@@ -15,9 +15,6 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     @IBOutlet weak var totalPriceLabel: UILabel!
     
-    var mediumPrice: Int?
-    var largePrice: Int?
-    var extraLargePrice: Int?
     
     var urlStr = "https://api.airtable.com/v0/apphzzfdMDr480WN8/OrderData"
     var loadingActivityIndicator: UIActivityIndicatorView!
@@ -28,7 +25,7 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
          
-        // Do any additional setup after loading the view.
+        
         creatLoadingView()
         updateUI()
         
@@ -54,10 +51,10 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             let coffeeName = orderData.Coffee
             let coffeeSize = orderData.Size
             let quantity = orderData.Quantity
+            let orderPrice = orderData.Price
             
             getCoffeeData(coffeeName: coffeeName)
             
-            let orderPrice = getOrderPrice(coffeeSize: coffeeSize, coffeeQuantity: quantity)
             
             cell.coffeeNameLabel.text = coffeeName
             cell.ordererNameLabel.text = ordererName
@@ -77,24 +74,13 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             let okAtcion = UIAlertAction(title: "確定", style: .default) { (_) in
                 let dataID = self.orderCoffeeData[indexPath.row].id
                 print(dataID)
-                self.deleteData(urlStr: self.urlStr, id: dataID) {
-                   // print("dalete 76")
-                    self.orderCoffeeData.remove(at: indexPath.row)
-                    DispatchQueue.main.async {
-                        
-                        self.ititTotal()
-                        tableView.deleteRows(at: [indexPath], with: .fade)
-                       // print("deleteRow")
-                    }
-                }
-                print("dalete 76")
+            
+                self.deleteData(urlStr: self.urlStr, id: dataID)
                 self.orderCoffeeData.remove(at: indexPath.row)
-                DispatchQueue.main.async {
-                    
-                    self.ititTotal()
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                    print("deleteRow")
-                }
+                self.ititTotal()
+                
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                print("deleteRow")
                 
             }
             
@@ -148,16 +134,12 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
         var totalPrice = 0
         var totalQuantity = 0
         
-        orderCoffeeData.forEach { (CoffeeOrder) in
-            totalQuantity += CoffeeOrder.fields.Quantity
-        }
         
         if orderCoffeeData.count > 0 {
             for index in 0...(orderCoffeeData.count-1){
                 getCoffeeData(coffeeName: orderCoffeeData[index].fields.Coffee)
-                let coffeeSize = orderCoffeeData[index].fields.Size
-                let coffeeQuantity = orderCoffeeData[index].fields.Quantity
-                totalPrice += getOrderPrice(coffeeSize: coffeeSize, coffeeQuantity: coffeeQuantity)
+                totalQuantity += orderCoffeeData[index].fields.Quantity
+                totalPrice += orderCoffeeData[index].fields.Price
             }
         }
         
@@ -169,36 +151,10 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
         menuData.forEach { (Record) in
             if coffeeName == Record.fields.Name{
                 self.imageURLStr = Record.fields.Img.first?.url
-                self.mediumPrice = Record.fields.Medium
-                self.largePrice = Record.fields.Large
-                guard let extraLargePrice = Record.fields.ExtraLarge
-                else { return  }
-                self.extraLargePrice = Record.fields.ExtraLarge
-                 
             }
         }
     }
 
-    
-    func getCoffeePrice(coffeeSize: String) -> Int {
-        var coffeePrice = 0
-        if coffeeSize == "中杯"{
-            coffeePrice = mediumPrice!
-        }
-        if coffeeSize == "大杯"{
-            coffeePrice = largePrice!
-        }
-        else{
-            coffeePrice = extraLargePrice!
-        }
-        return coffeePrice
-    }
-    
-    func getOrderPrice(coffeeSize: String,coffeeQuantity: Int) -> Int {
-        let coffeePrice = getCoffeePrice(coffeeSize: coffeeSize)
-        let orderPrice = coffeePrice * coffeeQuantity
-        return orderPrice
-    }
     
     func fetchData(urlstr: String, completionHandler: @escaping ([CoffeeOrder]?) -> Void) {
         print("fetch Data.....")
@@ -227,7 +183,7 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
         }
     }
     
-    func deleteData(urlStr: String, id: String,completionHandler: @escaping () -> Void){
+    func deleteData(urlStr: String, id: String){
         print("Delete Data")
         let deleteUrlStr = urlStr + "/\(id)"
         if let url = URL(string: deleteUrlStr){
@@ -249,24 +205,15 @@ class OrderListViewController: UIViewController,UITableViewDelegate,UITableViewD
             }.resume()
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let row = orderListTableView.indexPathForSelectedRow?.row,
            let controller = segue.destination as? OrderTableViewController {
             controller.delegate = self
             
             let selectedOrderCoffeeData = self.orderCoffeeData[row]
-            print(selectedOrderCoffeeData)
-            let coffeeSize = selectedOrderCoffeeData.fields.Size
-            let name = selectedOrderCoffeeData.fields.Name
+            
+            
             
             controller.updateOrderData = true
             controller.orderDataID = selectedOrderCoffeeData.id
