@@ -420,11 +420,13 @@
             </objects>
             <point key="canvasLocation" x="3026" y="30"/>
         </scene>
-        <!--Item-->
+        <!--Navigation Controller-->
         <scene sceneID="TlR-SF-BAb">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7FN-p0-8tH" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="YXH-W0-2jx"/>
+                    <tabBarItem key="tabBarItem" title="" id="YXH-W0-2jx">
+                        <imageReference key="image" image="pencil.slash" catalog="system"/>
+                    </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="lua-xo-m48">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -439,7 +441,7 @@
             </objects>
             <point key="canvasLocation" x="1173.913043478261" y="30.133928571428569"/>
         </scene>
-        <!--Item-->
+        <!--Order List View Controller-->
         <scene sceneID="YW1-iR-bTd">
             <objects>
                 <viewController id="5qm-34-DMf" customClass="OrderListViewController" customModule="CoffeeOrder" customModuleProvider="target" sceneMemberID="viewController">
@@ -649,7 +651,9 @@
                             <constraint firstItem="yaS-1g-mZy" firstAttribute="top" secondItem="YKT-ev-6ro" secondAttribute="top" constant="33" id="qwq-Ax-2SG"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="CoR-rW-fcX"/>
+                    <tabBarItem key="tabBarItem" title="" id="CoR-rW-fcX">
+                        <imageReference key="image" image="cart.fill" catalog="system"/>
+                    </tabBarItem>
                     <connections>
                         <outlet property="orderListTableView" destination="ci0-ME-1D6" id="e8o-lk-xFj"/>
                         <outlet property="totalPriceLabel" destination="IzZ-um-WjE" id="WF0-sU-gCm"/>
@@ -684,8 +688,10 @@
         <segue reference="XDE-8S-yYS"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="cart.fill" catalog="system" width="128" height="102"/>
         <image name="head" width="1200" height="630"/>
         <image name="minus.circle" catalog="system" width="128" height="121"/>
+        <image name="pencil.slash" catalog="system" width="128" height="113"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="radio_off" width="20" height="20"/>
         <image name="冷萃咖啡" width="600" height="600"/>
